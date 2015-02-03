@@ -27,26 +27,20 @@ def fixExtension(file):
     return newfile
 
 def readConfig(file):
-    lines=config.read().splitlines()
     systems=[]
-    for line in lines:
-        if not line.strip() or line[0]=='#':
+    config = ET.parse(file)
+    configroot = config.getroot()
+    for child in configroot:
+        name = child.find('name').text
+        path = child.find('path').text
+        ext = child.find('extension').text
+        pid = child.find('platformid').text
+        if not pid:
             continue
         else:
-            if "NAME=" in line:
-                name=line.split('=')[1]
-            if "PATH=" in line:
-                path=line.split('=')[1]
-            elif "EXTENSION" in line:
-                ext=line.split('=')[1]
-            elif "PLATFORMID" in line:
-                pid=line.split('=')[1]
-                if not pid:
-                    continue
-                else:
-                    system=(name,path,ext,pid)
-                    systems.append(system)
-    config.close()
+            system=(name,path,ext,pid)
+            systems.append(system)
+            print name, path, ext, pid
     return systems
 
 def crc(fileName):
