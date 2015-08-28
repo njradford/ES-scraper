@@ -34,7 +34,10 @@ def readConfig(file):
         name = child.find('name').text
         path = child.find('path').text
         ext = child.find('extension').text
-        pid = child.find('platformid').text
+        try:
+            pid = child.find('platformid').text
+        except:
+            pid = False;
         if not pid:
             continue
         else:
@@ -420,7 +423,7 @@ def scanFiles(SystemInfo):
 try:
     if os.getuid()==0:
         os.environ['HOME']="/home/"+os.getenv("SUDO_USER")
-    config=open(os.environ['HOME']+"/.emulationstation/es_systems.cfg")
+    config=open("/etc/emulationstation/es_systems.cfg")
 except IOError as e:
     sys.exit("Error when reading config file: %s \nExiting.." % e.strerror)
 
